@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Search from "./components/Search";
+import Result from "./components/Result";
 
-function App() {
+const App = () => {
+  const [word, setWord] = useState('');
+  const [result, setResult] = useState(null);
+
+  // Function to handle search, triggered by Search component
+  const handleSearch = async (searchWord) => {
+    const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${searchWord}`);
+    const data = await response.json();
+    setResult(data[0]); // Set the fetched result
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+     <h1 className="text-4xl font-bold mb-10">Dictionary App</h1>
+      <div>
+        <Search onSearch={handleSearch} setWord={setWord} word={word} />
+      </div>
+
+      <div>
+        <Result result={result} />
+      </div>
     </div>
   );
 }
